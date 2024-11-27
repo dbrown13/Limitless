@@ -1,0 +1,1 @@
+app, login, home, workout, goals, account, walk, rec are all connected together. 
