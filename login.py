@@ -73,7 +73,7 @@ def login():
                 </div>
             </form>
             <div style="margin-top: 15px; color: blue; text-decoration: underline;">
-                <a href="#">Create an account</a>
+                <a href="./register">Create an account</a>
             </div>
             <p>{message}</p>
         </div>
