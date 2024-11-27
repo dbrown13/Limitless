@@ -8,32 +8,26 @@ def get_db_connection():
     return conn
 
 def check_user(name, pw):
-    print("check_user")
-
-
+    # Get database connection
     conn = get_db_connection()
+    # Create cursor and run select to look for username
     cur = conn.cursor()
-    print("after connect")
-    print(f"name = {name}")
-    print(f"pw = {pw}")
     cur.execute('SELECT userName, userPW FROM users WHERE userName = ?', (name,))    
-    
+    # First row returned (should be only)
     row = cur.fetchone()
-    print(f"row = {row[1]}")
-    
+    # Close connection
     conn.close()
-    
-    print("after call")
+    # Nothing returned - user not found
     if row is None: 
         # user not found
         print("User name not found")
+    # Username found but password doesn't match
     elif row[1] != pw:
         # invalid password
         print("Invalid password")
+    # Both match - successful login
     else:
         print("Successful login")
-        import userStore
-        userStore.set_user(name)
         return True
        
     return False
