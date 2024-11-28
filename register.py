@@ -29,7 +29,7 @@ def add_user(firstName, lastName, email, userName, userPW):
         print("User Name already exists.")
         cur.close()
         conn.close()
-        return "User Name already exists"
+        return message
         
     conn.commit()
     cur.close()
