@@ -1,1 +1,4 @@
 app, login, home, workout, goals, account, walk, rec are all connected together. 
+Database added, connected for login & registration screens
+Need schema for exercise db (started)
+In order to use the jinja if statement, you need to use a template.  I will try to switch these all to templates next
