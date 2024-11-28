@@ -1,3 +1,5 @@
+# This is used to create the database and tables along with the two sql files
+
 import sqlite3
 
 connection = sqlite3.connect('userDB.db')
