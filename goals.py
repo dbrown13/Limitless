@@ -22,8 +22,8 @@ def get_goals(userName):
     cur = conn.cursor()
     # First pull all existing goals
     try:
-        result = cur.execute("SELECT goal FROM goals WHERE userName = ?", (userName,))
-        result = result.fetchall()
+        res = cur.execute("SELECT goal FROM goals WHERE userName = ?", (userName,))
+        result = res.fetchall()
         print_goals(result, userName)
     except:
         print("No existing goals found.")
