@@ -65,6 +65,10 @@ def register():
 
         if (message == "Successful"):
             message = "Successful registration!"
+            valFirst=""
+            valLast=""
+            valEmail=""
+            valUser=""
             return redirect(url_for("login.login"))  # Redirect to the login page
 
     html = f"""

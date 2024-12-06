@@ -39,9 +39,9 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
+        import userStore
         if check_user(username, password):
         #if username == "user" and password == "1234":
-            import userStore
             userStore.set_user(username)
             return redirect(url_for("home.home"))  # Redirect to the home page
         else:
