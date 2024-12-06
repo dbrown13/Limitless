@@ -2,11 +2,12 @@ from flask import Blueprint, request, redirect, url_for
 import sqlite3
 from jinja2 import Template
 
-
 global insert_html
 insert_html = ""
+global goalList
+goalList = []
 
-goals_bp = Blueprint("goals", __name__)
+del_goal_bp = Blueprint("goals/delete", __name__)
 
 def get_db_connection():
     conn = sqlite3.connect('userDB.db', timeout=10.0)
@@ -14,6 +15,7 @@ def get_db_connection():
     return conn
 
 def get_goals(userName):
+    print("get goals")
     global insert_html
     insert_html=""
     # Get database connection
@@ -37,27 +39,32 @@ def get_goals(userName):
     return True
 
 def print_goals(result, userName):
-    goalNum = 0
+    print("print goals")
+    global goalList
+    goalList = []
+    #goalNum = 0
     for goal in result:
-        goalNum=goalNum+1
+        #goalNum=goalNum+1
+        goalList.append(goal[0])
         global insert_html
         #insert_html= insert_html + '<li>' + goal[0] + '<button class="del_button" type="submit" name="del_goal" id="button"' + str(goalNum) + '>Delete</button></li>\n'
         insert_html= insert_html + '<li>' + goal[0] + '</li>\n'
         print(insert_html)
     return True
 
-def add_goal(userName, goal):
-    print("add goal")
-    print(userName)
-    print(goal)
+def del_num(userName, num):
+    print("del goal")
+    global goalList
+    print(goalList[num])
+    
     # Get database connection
     conn = get_db_connection()
     # Create cursor and run select to look for username
     cur = conn.cursor()
 
     try:
-        cur.execute("INSERT INTO goals (userName, goal) VALUES (?, ?)",
-                    (userName, goal)
+        cur.execute("DELETE FROM goals WHERE userName=? and goal=?",
+                    (userName, goalList[num])
                     )
     except sqlite3.Error as e:
         print("Error:", e.args[0])
@@ -69,17 +76,12 @@ def add_goal(userName, goal):
     conn.commit()
     cur.close()
     conn.close()    
-    print("Successful add")
 
     return "Successful"
 
+@del_goal_bp.route('/', methods=('GET', 'POST'))
 def del_goal():
-    print("del goal")
-    return redirect(url_for("delgoal.delgoal")) 
-
-@goals_bp.route("/", methods=('GET', 'POST'))
-def goals():
-    print("goals")
+    print("delete goal")
     #userName = userStore.get_user()
     userName="diverdib" # Temporary
     # if this doesn't work, something is wrong with login
@@ -87,10 +89,9 @@ def goals():
     print("after get_goals")
     print(request)
     if request.method == "POST":
-        print("add")            
-        goal = request.form["add_goal"]
-        print(goal)
-        result = add_goal(userName, goal)
+        print("delete")            
+        goalNum = request.form["del_goal"]
+        result = del_num(userName, int(goalNum)-1)
         if (result == "Successful"):
             print(result)
             message = result
@@ -105,14 +106,14 @@ def goals():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>My Flask App</title>
+        <title>Limitless</title>
         <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #f4f4f4;
-            }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
             nav ul {
                 list-style-type: none;
                 margin: 0;
@@ -238,8 +239,7 @@ def goals():
         </style>                          
     </head>
     <body>
-
-            <nav>
+        <nav>
             <ul>
                 <li><h2>Limitless</h2></li>
                 <li><a href="/home/">Home</a></li>
@@ -248,23 +248,23 @@ def goals():
             </ul>
         </nav>
         
-        <h1>Add a personal goal:</h1>
-        <form method="POST">
-            <input type="text" name="add_goal" placeholder="Enter your goal" required>
-            <button type="submit">Submit</button>
-        </form>
+        <h1>Delete a Goal</h1>
+        <hr>
         <h2>Your Current Goals:</h2>
         <form method="POST">
             <ol id="goals">
                 {{ goalsList }}
             </ol>
         </form>
+        <br><hr><br>
+        <form method="POST">
+            <input type="text" name="del_goal" placeholder="Enter number of goal you would like to delete" required>
+            <button type="submit">Submit</button>
+        </form>
         <br>
         <hr>
         <br>
-        <form action="/delete">
-            <input type="submit" value="Delete a Goal">
-        </form>
+        <a href=
         </body>
     </html>
     """)

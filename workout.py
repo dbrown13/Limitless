@@ -110,15 +110,15 @@ def workout():
 
         <div class="icon-container">
             <div class="icon">
-                <img src="https://via.placeholder.com/50" alt="Walking">
+                <img src="/static/img/walking.jpg" alt="Walking">
                 <p><a href='/walk/'>Walking</a></p>
             </div>
             <div class="icon">
-                <img src="https://via.placeholder.com/50" alt="Lifting">
+                <img src="/static/img/weightlifting.png" alt="Lifting">
                 <p>Lifting</p>
             </div>
             <div class="icon">
-                <img src="https://via.placeholder.com/50" alt="HIIT">
+                <img src="/static/img/HIIT.jpg" alt="HIIT">
                 <p>HIIT</p>
             </div>
             <div class="icon">

@@ -22,7 +22,14 @@ def home():
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Home Page</title>
             <style>
-            ul {
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }
+
+            nav ul {
                 list-style-type: none;
                 margin: 0;
                 padding: 0;
@@ -30,41 +37,40 @@ def home():
                 background-color: #333;
             }
 
-            li {
+            nav li {
                 float: left;
             }
 
-            li h2 {
+            nav li h2 {
                 display: block;
                 color: lightblue;
                 text-align: center;
-                padding-left: 10px;
-                text-decoration: none;
+                padding: 14px 16px;
+                margin: 0;
             }
 
-            li a {
+            nav li a {
                 display: block;
                 color: white;
                 text-align: center;
-                padding-top: 27px;
-                padding-left: 30px;
+                padding: 14px 16px;
                 text-decoration: none;
             }
 
-            /* Change the link color to #111 (black) on hover */
-            li a:hover {
-                color: lightblue;
+            nav li a:hover {
+                background-color: lightblue;
+                color: black;
             }
 
             .active {
-                color: white;
-                padding-right: 14px;
-                border-radius: 12px;
+                background-color: lightskyblue;
+                color: black;
             }
 
             #achievements-card {
                 border: 2px solid lightblue;
                 padding: 50px;
+                margin-left: 25%;
                 color: black;
                 display: block;
                 float: left;
@@ -80,6 +86,7 @@ def home():
             #goals-card {
                 border: 2px solid lightblue;
                 padding: 50px;
+                margin-right: 25%;
                 color: black;
                 display: block;
                 float: right;
@@ -90,6 +97,15 @@ def home():
                 margin: 0 auto;
                 display: inline-block;
                 text-align: center;
+                padding: 10px;
+            }
+
+            .summary-container {
+                border: 2px solid lightgray;
+                width: 80%;
+                margin: 10%;
+                padding: 10px;
+                color: black;
             }
     </style>
     </head>
