@@ -103,7 +103,7 @@ def home():
 
         <div class="icon-container">
             <div class="icon">
-                <img src="https://via.placeholder.com/50" alt="Walking">
+                <img src="./images/walking.jpg" alt="Walking">
                 <p>Walking</p>
             </div>
             <div class="icon">
