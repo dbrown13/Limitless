@@ -8,16 +8,16 @@ insert_html = ""
 global actList
 actList = []
 
-workout_bp = Blueprint("workout", __name__)
+#workout_bp = Blueprint("workout", __name__)
 
-walk_bp = Blueprint("walk",__name__)
+lift_bp = Blueprint("lift",__name__)
 
 def get_db_connection():
     conn = sqlite3.connect('userDB.db', timeout=10.0)
     conn.row_factory = sqlite3.Row
     return conn
 
-def get_walks(userName):
+def get_lifts(userName):
     global insert_html
     insert_html=""
     # Get database connection
@@ -25,12 +25,11 @@ def get_walks(userName):
     # Create cursor and run select to look for username
     cur = conn.cursor()
     # First pull all existing 
-    actType = "walking"
+    actType = "lifting"
     try:
-        print(f"actType= {actType}")
         res = cur.execute("SELECT * FROM activities WHERE userName = ? AND activity = ?", (userName, actType))
         result = res.fetchall()
-        print_activities(result, userName)
+
     except:
         print("Database error")
         result = None
@@ -39,22 +38,22 @@ def get_walks(userName):
         return False
     
     if len(result) == 0:
-        print("No walking activities found.")
-        result = "No walking activities found"
+        print("No lifting activities found.")
+        result = "No lifting activities found"
     
     print_activities(result, userName)
-    
+
     cur.close()
     conn.close()
     return True
 
 def print_activities(result, userName):
     global insert_html
-    if result == "No walking activities found":
+    if result == "No lifting activities found":
         insert_html = result
     else:
         for activity in result:
-            insert_html = insert_html + '<li>' + activity[2] + ':  ' + str(activity[3]) + ' miles, ' + str(activity[4]) + ' calories, ' + str(activity[5]) + 'oz of water</li>\n'
+            insert_html = insert_html + '<li>' + activity[2] + ':  ' + str(activity[3]) + ' reps, ' + str(activity[4]) + ' calories, ' + str(activity[5]) + 'oz of water</li>\n'
     
     print(f"html = {insert_html}")
     return True
@@ -83,37 +82,28 @@ def add_activity(userName, act, miles, cal, water):
 
     return "Successful"
 
-@walk_bp.route('/', methods=['GET', 'POST'])
-def walk():
+@lift_bp.route('/', methods=['GET', 'POST'])
+def lift():
 
     #userName = userStore.get_user()
     userName="diverdib" # Temporary
     # if this doesn't work, something is wrong with login
-    get_walks(userName)
+    get_lifts(userName)
 
     if request.method == 'POST':
         # Get data from the form
-        miles = request.form.get('miles')
+        reps = request.form.get('reps')
         calories = request.form.get('calories')
         water = request.form.get('water')
         
-        result = add_activity(userName, "walking", miles, calories, water)
+        result = add_activity(userName, "lifting", reps, calories, water)
         if (result == "Successful"):
             print(result)
             message = result
-            get_walks(userName)
+            get_lifts(userName)
         else:
             print(result)
             message = result
-
-        # Response with submitted data
-        #return f"""
-        #<h2>Data Submitted:</h2>
-        #<p><strong>Miles:</strong> {miles}</p>
-        #<p><strong>Calories Burned:</strong> {calories}</p>
-        #<p><strong>Water:</strong> {water} oz</p>
-        #<a href="/">Go back</a>
-        #"""
     
     # HTML for the form
     template = Template("""
@@ -122,7 +112,7 @@ def walk():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Walking Tracker</title>
+        <title>Lifting Tracker</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -141,11 +131,11 @@ def walk():
         </style>
     </head>
     <body>
-        <h2>Walking</h2>
+        <h2>Lifting</h2>
         <form method="POST">
             <div>
-                <label for="miles">Miles:</label>
-                <input type="text" id="miles" name="miles" required>
+                <label for="reps">Reps:</label>
+                <input type="text" id="reps" name="reps" required>
             </div>
             <div>
                 <label for="calories">Calories Burned:</label>
@@ -160,9 +150,9 @@ def walk():
             </div>
         </form>
         <hr>
-        <h2>Your Current Walks:</h2>
+        <h2>Your Current Lifts:</h2>
         <form method="POST">
-            <ol id="walks" class="list">
+            <ol id="reps" class="list">
                 {{ actList }}
             </ol>
         </form>

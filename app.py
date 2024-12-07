@@ -9,6 +9,7 @@ from account import account_bp
 from goals import goals_bp
 from del_goal import del_goal_bp
 from walk import walk_bp
+from lift import lift_bp
 from rec import rec_bp
 
 app = Flask(__name__)
@@ -22,6 +23,7 @@ app.register_blueprint(account_bp, url_prefix="/account")
 app.register_blueprint(goals_bp, url_prefix="/goals")
 app.register_blueprint(del_goal_bp, url_prefix="/delete")
 app.register_blueprint(walk_bp, url_prefix="/walk")
+app.register_blueprint(lift_bp, url_prefix="/lift")
 app.register_blueprint(rec_bp, url_prefix="/rec")
 
 if __name__ == "__main__":
