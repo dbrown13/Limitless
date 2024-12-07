@@ -115,7 +115,7 @@ def workout():
             </div>
             <div class="icon">
                 <img src="/static/img/weightlifting.png" alt="Lifting">
-                <p>Lifting</p>
+                <p><a href='/lift/'>Lifting</a></p>
             </div>
             <div class="icon">
                 <img src="/static/img/HIIT.jpg" alt="HIIT">
