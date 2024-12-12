@@ -11,9 +11,9 @@ actList = []
 
 workout_bp = Blueprint("workout", __name__)
 
-walk_bp = Blueprint("walk",__name__)
+hiit_bp = Blueprint("hiit",__name__)
 
-def get_walks(userName):
+def get_hiits(userName):
     global insert_html
     insert_html=""
     # Get database connection
@@ -21,7 +21,7 @@ def get_walks(userName):
     # Create cursor and run select to look for username
     cur = conn.cursor()
     # First pull all existing 
-    actType = "walking"
+    actType = "hiit"
     try:
         res = cur.execute("SELECT * FROM activities WHERE userName = ? AND activity = ?", (userName, actType))
         result = res.fetchall()
@@ -33,8 +33,8 @@ def get_walks(userName):
         return False
     
     if len(result) == 0:
-        print("No walking activities found.")
-        result = "No walking activities found"
+        print("No hiit activities found.")
+        result = "No hiit activities found"
     
     print_activities(result, userName)
     
@@ -45,7 +45,7 @@ def get_walks(userName):
 def print_activities(result, userName):
     global insert_html
     insert_html=""
-    if result == "No walking activities found":
+    if result == "No hiit activities found":
         insert_html = result
     else:
         for activity in result:
@@ -77,29 +77,29 @@ def add_activity(userName, act, miles, cal, water):
     return message
 
 
-@walk_bp.route('/', methods=['GET', 'POST'])
-def walk():
+@hiit_bp.route('/', methods=['GET', 'POST'])
+def hiit():
 
     #userName = userStore.get_user()
     userName="diverdib" # Temporary
     # if this doesn't work, something is wrong with login
-    get_walks(userName)
+    get_hiits(userName)
 
     if request.method == 'POST':
         # Get data from the form
         minutes = request.form.get('minutes')
         intensity = request.form.get('intensity')
         water = request.form.get('water')
-        calories = getCalories.get_calories("walking", intensity, minutes)
+        calories = getCalories.get_calories("hiit", intensity, minutes)
         if calories == -1:
             print("No weight registered")
             calories = 0
         print(f"calories = {calories}")
-        result = add_activity(userName, "walking", minutes, calories, water)
+        result = add_activity(userName, "hiit", minutes, calories, water)
         if (result == "Successful activity add"):
             print(result)
             message = result
-            get_walks(userName)
+            get_hiits(userName)
         else:
             print(result)
             message = result
@@ -112,7 +112,7 @@ def walk():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Walking Tracker</title>
+        <title>HIIT Tracker</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -131,7 +131,7 @@ def walk():
         </style>
     </head>
     <body>
-        <h2>Walking</h2>
+        <h2>HIIT</h2>
         <form method="POST">
             <div class="act-container">
                 <div>
@@ -159,9 +159,9 @@ def walk():
             </div>
         </form>
         <hr>
-        <h2>Your Current Walks:</h2>
+        <h2>Your Current HIIT:</h2>
         <form method="POST">
-            <ol id="walks" class="list">
+            <ol id="hiits" class="list">
                 {{ actList }}
             </ol>
         </form>

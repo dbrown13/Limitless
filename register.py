@@ -1,5 +1,8 @@
 from flask import Flask, Blueprint, request, redirect, url_for, render_template
 import sqlite3
+import database
+
+register_bp = Blueprint("register", __name__)
 
 # Global variables
 valFirst = ""
@@ -9,21 +12,16 @@ valUser = ""
 valPW = ""
 valPW2 = ""
 
-register_bp = Blueprint("register", __name__)
-def get_db_connection():
-    conn = sqlite3.connect('userDB.db', timeout=10.0)
-    conn.row_factory = sqlite3.Row
-    return conn
-
 def add_user(firstName, lastName, email, userName, userPW):
     # Get database connection
-    conn = get_db_connection()
+    conn = database.get_db_connection()
     # Create cursor and run select to look for username
     cur = conn.cursor()
     try:
         cur.execute("INSERT INTO users (firstName, lastName, email, userName, userPW) VALUES (?, ?, ?, ?, ?)",
                     (firstName, lastName, email, userName, userPW)
                     )
+        message = "Successful registration"
     except sqlite3.IntegrityError:
         message = "User Name already exists."
         print("User Name already exists.")
@@ -35,7 +33,7 @@ def add_user(firstName, lastName, email, userName, userPW):
     cur.close()
     conn.close()    
 
-    return "Successful"
+    return message
 
 @register_bp.route("/", methods=["GET", "POST"])
 def register():
