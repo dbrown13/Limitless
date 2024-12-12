@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS metTable;
+
+CREATE TABLE metTable (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    activity TEXT NOT NULL,
+    intensity TEXT NOT NULL,
+    met FLOAT NOT NULL
+);

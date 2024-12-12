@@ -1,15 +1,12 @@
 from flask import Flask, Blueprint, request, redirect, url_for, render_template
 import sqlite3
+import database
 
 login_bp = Blueprint("login", __name__)
-def get_db_connection():
-    conn = sqlite3.connect('userDB.db', timeout=10.0)
-    conn.row_factory = sqlite3.Row
-    return conn
 
 def check_user(name, pw):
     # Get database connection
-    conn = get_db_connection()
+    conn = database.get_db_connection()
     # Create cursor and run select to look for username
     cur = conn.cursor()
     cur.execute('SELECT userName, userPW FROM users WHERE userName = ?', (name,))    
@@ -43,6 +40,8 @@ def login():
         if check_user(username, password):
         #if username == "user" and password == "1234":
             userStore.set_user(username)
+            weight = database.get_Weight_from_db(username)
+            userStore.set_weight(weight)
             return redirect(url_for("home.home"))  # Redirect to the home page
         else:
             userStore.set_user("")
