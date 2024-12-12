@@ -1,23 +1,18 @@
 from flask import Blueprint, request, redirect, url_for
 import sqlite3
+import database
 from jinja2 import Template
-
 
 global insert_html
 insert_html = ""
 
 goals_bp = Blueprint("goals", __name__)
 
-def get_db_connection():
-    conn = sqlite3.connect('userDB.db', timeout=10.0)
-    conn.row_factory = sqlite3.Row
-    return conn
-
 def get_goals(userName):
     global insert_html
     insert_html=""
     # Get database connection
-    conn = get_db_connection()
+    conn = database.get_db_connection()
     # Create cursor and run select to look for username
     cur = conn.cursor()
     # First pull all existing goals
@@ -51,7 +46,7 @@ def add_goal(userName, goal):
     print(userName)
     print(goal)
     # Get database connection
-    conn = get_db_connection()
+    conn = database.get_db_connection()
     # Create cursor and run select to look for username
     cur = conn.cursor()
 

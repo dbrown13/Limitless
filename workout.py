@@ -119,31 +119,31 @@ def workout():
             </div>
             <div class="icon">
                 <img src="/static/img/HIIT.jpg" alt="HIIT">
-                <p>HIIT</p>
+                <p><a href='/hiit/'>HIIT</a></p>
             </div>
             <div class="icon">
-                <img src="https://via.placeholder.com/50" alt="Running">
-                <p>Running</p>
+                <img src="/static/img/running.jpg" alt="Running">
+                <p><a href='/run/'>Running</a></p>
             </div>
             <div class="icon">
-                <img src="https://via.placeholder.com/50" alt="Yoga">
-                <p>Yoga</p>
+                <img src="/static/img/yoga.png" alt="Yoga">
+                <p><a href='/yoga/'>Yoga</a></p>
             </div>
             <div class="icon">
                 <img src="https://via.placeholder.com/50" alt="Sports">
                 <p>Sports</p>
             </div>
             <div class="icon">
-                <img src="https://via.placeholder.com/50" alt="Swimming">
-                <p>Swimming</p>
+                <img src="/static/img/swim.png" alt="Swimming">
+                <p><a href ='/swimming/'>Swimming</a></p>
             </div>
             <div class="icon">
                 <img src="https://via.placeholder.com/50" alt="Recommendation">
                 <p><a href='/rec/'>Recommendation</a></p>
             </div>
             <div class="icon">
-                <img src="https://via.placeholder.com/50" alt="Cycling">
-                <p>Cycling</p>
+                <img src="/static/img/cycle.jpg" alt="Cycling">
+                <p><a href='/cycle/'>Cycling</a></p>
             </div>
         </div>
     </body>

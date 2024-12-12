@@ -7,5 +7,6 @@ CREATE TABLE users (
     email TEXT NOT NULL,
     userName TEXT NOT NULL UNIQUE,
     userPW TEXT NOT NULL,
+    userWeight FLOAT DEFAULT 0,
     userActive BOOLEAN DEFAULT TRUE
 );

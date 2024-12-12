@@ -1,27 +1,23 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, url_for, redirect
 import sqlite3
+import database
+import getCalories
 from jinja2 import Template
-
 
 global insert_html
 insert_html = ""
 global actList
 actList = []
 
-#workout_bp = Blueprint("workout", __name__)
+workout_bp = Blueprint("workout", __name__)
 
 lift_bp = Blueprint("lift",__name__)
-
-def get_db_connection():
-    conn = sqlite3.connect('userDB.db', timeout=10.0)
-    conn.row_factory = sqlite3.Row
-    return conn
 
 def get_lifts(userName):
     global insert_html
     insert_html=""
     # Get database connection
-    conn = get_db_connection()
+    conn = database.get_db_connection()
     # Create cursor and run select to look for username
     cur = conn.cursor()
     # First pull all existing 
@@ -29,7 +25,6 @@ def get_lifts(userName):
     try:
         res = cur.execute("SELECT * FROM activities WHERE userName = ? AND activity = ?", (userName, actType))
         result = res.fetchall()
-
     except:
         print("Database error")
         result = None
@@ -42,25 +37,26 @@ def get_lifts(userName):
         result = "No lifting activities found"
     
     print_activities(result, userName)
-
+    
     cur.close()
     conn.close()
     return True
 
 def print_activities(result, userName):
     global insert_html
+    insert_html=""
     if result == "No lifting activities found":
         insert_html = result
     else:
         for activity in result:
-            insert_html = insert_html + '<li>' + activity[2] + ':  ' + str(activity[3]) + ' reps, ' + str(activity[4]) + ' calories, ' + str(activity[5]) + 'oz of water</li>\n'
+            insert_html = insert_html + '<li>' + activity[2] + ':  ' + str(activity[3]) + ' minutes, ' + str(activity[4]) + ' calories, ' + str(activity[5]) + 'oz of water</li>\n'
     
     print(f"html = {insert_html}")
     return True
 
 def add_activity(userName, act, miles, cal, water):
     # Get database connection
-    conn = get_db_connection()
+    conn = database.get_db_connection()
     # Create cursor and run select to look for username
     cur = conn.cursor()
 
@@ -68,19 +64,18 @@ def add_activity(userName, act, miles, cal, water):
         cur.execute("INSERT INTO activities (userName, activity, actNum, calories, water) VALUES (?, ?, ?, ?, ?)",
                     (userName, act, miles, cal, water)
                     )
+        message = "Successful activity add"
     except sqlite3.Error as e:
         print("Error:", e.args[0])
         message = e.args[0]
-        cur.close()
-        conn.close()
-        return message
         
     conn.commit()
     cur.close()
-    conn.close()    
-    print("Successful add")
+    conn.close()   
 
-    return "Successful"
+    print(message)
+    return message
+
 
 @lift_bp.route('/', methods=['GET', 'POST'])
 def lift():
@@ -92,18 +87,23 @@ def lift():
 
     if request.method == 'POST':
         # Get data from the form
-        reps = request.form.get('reps')
-        calories = request.form.get('calories')
+        minutes = request.form.get('minutes')
+        intensity = request.form.get('intensity')
         water = request.form.get('water')
-        
-        result = add_activity(userName, "lifting", reps, calories, water)
-        if (result == "Successful"):
+        calories = getCalories.get_calories("lifting", intensity, minutes)
+        if calories == -1:
+            print("No weight registered")
+            calories = 0
+        print(f"calories = {calories}")
+        result = add_activity(userName, "lifting", minutes, calories, water)
+        if (result == "Successful activity add"):
             print(result)
             message = result
             get_lifts(userName)
         else:
             print(result)
             message = result
+
     
     # HTML for the form
     template = Template("""
@@ -112,7 +112,7 @@ def lift():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Lifting Tracker</title>
+        <title>lifting Tracker</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -133,17 +133,26 @@ def lift():
     <body>
         <h2>Lifting</h2>
         <form method="POST">
-            <div>
-                <label for="reps">Reps:</label>
-                <input type="text" id="reps" name="reps" required>
+            <div class="act-container">
+                <div>
+                    <label for="minutes">Minutes:</label>
+                    <input type="integer" id="minutes" name="minutes" required>
+                </div>
+                <div>
+                    <label for="intensity">Intensity:</label>
+                    <select type= "text" name="intensity" id="intensity" required>
+                        <option selected value="low">Low</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div style="margin-top: 20px;">
             </div>
-            <div>
-                <label for="calories">Calories Burned:</label>
-                <input type="text" id="calories" name="calories" required>
-            </div>
-            <div>
-                <label for="water">Water (oz):</label>
-                <input type="text" id="water" name="water" required>
+            <div class="addl-container">
+                <div>
+                    <label for="water">Water (oz):</label>
+                    <input type="text" id="water" name="water" required>
+                </div>
             </div>
             <div style="margin-top: 20px;">
                 <button type="submit">Submit</button>
@@ -152,13 +161,13 @@ def lift():
         <hr>
         <h2>Your Current Lifts:</h2>
         <form method="POST">
-            <ol id="reps" class="list">
+            <ol id="lifts" class="list">
                 {{ actList }}
             </ol>
         </form>
         <br>
         <hr>
-        <br>
+        <br>      
     </body>
     </html>
     """)
