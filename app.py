@@ -3,7 +3,8 @@ from flask import Flask
 # Importing blueprints from other files
 from login import login_bp
 from profile_screen import profile_bp
-from edit_profile import edit_profile_bp
+#from edit_profile import edit_profile_bp
+from profile_screen import edit_profile_bp
 from resetPW import resetPW_bp
 from register import register_bp
 from home import home_bp
