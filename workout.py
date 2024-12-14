@@ -107,6 +107,8 @@ def workout():
                 <li><a href="/goals">Goals</a></li>
                 <li><a href="/about">About Us</a></li>
                 <li style="float:right"><a class="active" href="/logout">Logout</a></li>
+                <li style="float:right"><a class="active" href="/profile">Profile</a></li>
+
             </ul>
         </nav>
 
