@@ -1,9 +1,56 @@
-from flask import Blueprint
-account_bp = Blueprint("account", __name__)
+from flask import Flask, Blueprint, render_template_string, request, redirect, url_for
+from jinja2 import Template
+import sqlite3
+import database
+import userStore
+
+profile_bp = Blueprint("profile_screen", __name__)
 
 
-@account_bp.route('/')
-def account():
+# profile structure
+profile_data = {
+    "firstName": "Enter first name here",
+    "lastName": "Enter last name here",
+    "email": "Enter email here",
+    "userName": "Enter user name here",
+    "weight": "Enter weight here",
+    "userBio": "Enter biography here"
+}
+
+def get_data():
+    userName = userStore.get_user()
+
+    # Get database connection
+    conn = database.get_db_connection()
+    # Create cursor
+    cur = conn.cursor()
+
+    try:
+        cur.execute('SELECT firstName, lastName, email, userWeight, userBio, userPhoto FROM users WHERE userName = ?', (userName,))
+        message = "Successful retrieval"
+        data = cur.fetchone()
+        if data == None:
+            message = "No data retrieved"
+            print(message)
+        else:
+            global profile_data
+            profile_data.update({"firstName": data[0]})
+            profile_data.update({"lastName": data[1]})
+            profile_data.update({"userName": userName})
+            profile_data.update({"email": data[2]})
+            profile_data.update({"weight": data[3]})
+            profile_data.update({"userBio": data[4]})
+    except sqlite3.IntegrityError:
+        message = "User Name does not exist."
+        print(message)
+        cur.close()
+        conn.close()
+        return message    
+
+@profile_bp.route('/')
+def profile():
+    get_data()
+
     html = """
     <!DOCTYPE html>
     <html lang="en">
@@ -12,7 +59,6 @@ def account():
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Limitless - Profile Page</title>
         <style>
-            /* General Styles */
             body {
                 font-family: Arial, sans-serif;
                 margin: 0;
@@ -73,7 +119,7 @@ def account():
                 line-height: 100px;
                 text-align: center;
                 margin-bottom: 20px;
-                color: #000;
+                background-color: #ddd;
             }
 
             .profile-details {
@@ -109,6 +155,7 @@ def account():
         <nav>
             <ul>
                 <li><h2>Limitless</h2></li>
+                <li><a href="/home">Home</a></li>
                 <li><a href="/workout">Workout</a></li>
                 <li><a href="/goals">Goals</a></li>
                 <li><a href="/about">About Us</a></li>
@@ -121,17 +168,25 @@ def account():
                 <span>&#128100;</span> <!-- Unicode for user icon -->
             </div>
             <div class="profile-details">
-                <p><strong>Name:</strong> [Your Name]</p>
-                <p><strong>Address:</strong> [Your Address]</p>
-                <p><strong>Phone Number:</strong> [Your Phone Number]</p>
-                <p><strong>Biography:</strong> [Short Bio]</p>
+                <p><strong>First Name:</strong> {{ profile.firstName }}</p>
+                <p><strong>Last Name:</strong> {{ profile.lastName }}</p>
+                <p><strong>Username:</strong> {{ profile.userName }}</p>
+                <p><strong>Email:</strong> {{ profile.email}}
+                <p><strong>Weight:</strong> {{ profile.weight }}</p>
+                <p><strong>Biography:</strong> {{ profile.userBio }}</p>
             </div>
             <div class="buttons">
-                <button>Edit Profile</button>
-                <button>Logout</button>
+                <form action="/edit_profile" style="display: inline;">
+                    <button type="submit">Edit Profile</button>
+                </form>
+                <form action="/logout" method="POST" style="display: inline;">
+                    <button>Logout</button>
+                </form>
             </div>
         </div>
     </body>
     </html>
     """
-    return html
+    return render_template_string(html, profile=profile_data)
+
+

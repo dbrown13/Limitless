@@ -9,22 +9,23 @@ valFirst = ""
 valLast = ""
 valEmail = ""
 valUser = ""
+valWt = ""
 valPW = ""
 valPW2 = ""
 
-def add_user(firstName, lastName, email, userName, userPW):
+def add_user(firstName, lastName, email, userName, userPW, userWeight):
     # Get database connection
     conn = database.get_db_connection()
     # Create cursor and run select to look for username
     cur = conn.cursor()
     try:
-        cur.execute("INSERT INTO users (firstName, lastName, email, userName, userPW) VALUES (?, ?, ?, ?, ?)",
-                    (firstName, lastName, email, userName, userPW)
+        cur.execute("INSERT INTO users (firstName, lastName, email, userName, userPW, userWeight) VALUES (?, ?, ?, ?, ?, ?)",
+                    (firstName, lastName, email, userName, userPW, userWeight)
                     )
         message = "Successful registration"
     except sqlite3.IntegrityError:
         message = "User Name already exists."
-        print("User Name already exists.")
+        print(message)
         cur.close()
         conn.close()
         return message
@@ -43,6 +44,7 @@ def register():
         lastName = request.form["lastName"]
         userEmail = request.form["userEmail"]
         userName = request.form["userName"]
+        userWeight = request.form["userWeight"]
         userPW = request.form["userPW"]
         userPW2 = request.form["userPW2"]
 
@@ -55,11 +57,13 @@ def register():
         valEmail=userEmail
         global valUser
         valUser=userName
+        global valWt
+        valWt = userWeight
 
         if (userPW != userPW2):
             message = "Passwords must match."
         else: 
-            message = add_user(firstName, lastName, userEmail, userName, userPW)
+            message = add_user(firstName, lastName, userEmail, userName, userPW, userWeight)
 
         if (message == "Successful"):
             message = "Successful registration!"
@@ -67,6 +71,7 @@ def register():
             valLast=""
             valEmail=""
             valUser=""
+            valWt=""
             return redirect(url_for("login.login"))  # Redirect to the login page
 
     html = f"""
@@ -98,6 +103,10 @@ def register():
                     <input type="text" name="userName" placeholder="Enter user name or email" value=\"{valUser}\" required>
                 </div>
                 <div style="margin-top: 10px; font-family: sans-serif">
+                    <label>Current Weight:</label>
+                    <input type="text" name="userWeight" placeholder="Enter current weight" value=\"{valWt}\" required>
+                </div>
+                <div style="margin-top: 10px; font-family: sans-serif">
                     <label>Password:</label>
                     <input type="password" name="userPW" placeholder="Enter password" value=\"{valPW}\" required>
                 </div>
@@ -110,7 +119,7 @@ def register():
                 </div>
             </form>
             <div style="margin-top: 15px; color: blue; text-decoration: underline;">
-                <a href="#">Create an account</a>
+                <a href="/">Return to Login</a>
             </div>
             <p>{message}</p>
         </div>

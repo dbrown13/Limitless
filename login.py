@@ -38,7 +38,6 @@ def login():
 
         import userStore
         if check_user(username, password):
-        #if username == "user" and password == "1234":
             userStore.set_user(username)
             weight = database.get_Weight_from_db(username)
             userStore.set_weight(weight)
@@ -48,7 +47,6 @@ def login():
             message = "Incorrect Username or Password."
 
     html = f"""
-    <!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -68,11 +66,14 @@ def login():
                     <input type="password" name="password" required>
                 </div>
                 <div style="margin-top: 20px; font-family: sans-serif">
-                    <button type="submit">Login</button>
+                    <button type="submit" class="buttons">Login</button>
                 </div>
             </form>
             <div style="margin-top: 15px; color: blue; text-decoration: underline;">
                 <a href="./register">Create an account</a>
+            </div>
+            <div style="margin-top: 15px; color: blue; text-decoration: underline;">
+                <a href="./resetPW">Reset Password</a>
             </div>
             <p>{message}</p>
         </div>
