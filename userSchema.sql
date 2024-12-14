@@ -8,5 +8,7 @@ CREATE TABLE users (
     userName TEXT NOT NULL UNIQUE,
     userPW TEXT NOT NULL,
     userWeight FLOAT DEFAULT 0,
+    userBio TEXT,
+    userPhoto BLOB,
     userActive BOOLEAN DEFAULT TRUE
 );

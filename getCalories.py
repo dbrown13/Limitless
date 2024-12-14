@@ -18,7 +18,6 @@ def get_met(activity, intensity):
         else:
             print(f"No met found for {activity} {intensity}")
             return 0
-        print(f"MET = {met}")
     except sqlite3.Error as e:
         print(f"Database error: {e}")  # Prints the full error message
         print(f"No met found for {activity} {intensity}")
@@ -32,23 +31,17 @@ def get_met(activity, intensity):
     return met  
 
 def get_calories(activity, intensity, minutes):    
-    #userName = userStore.get_user()
-    #weight = userStore.get_weight()
-    #userName = "diverdib"
-    print("get calories")
-    print(f"activity = {activity}")
-    print(f"intensity = {intensity}")
-    print(f"minutes = {minutes}")
-    weight = 140
+    userName = userStore.get_user()
+    weight = userStore.get_weight()
+
     if weight == 0:
         message = "No weight recorded"
         print(message)
         return -1
-    print(f"Weight = {weight}")
+
     global kgWeight
     kgWeight = weight * 2.2
     met = get_met(activity, intensity)
     cals =round(met * 3.5 * kgWeight/200 * int(minutes), 2)
-    print(f"calories = {cals}")
 
     return cals

@@ -1,6 +1,7 @@
 from flask import Blueprint, request, redirect, url_for
 import sqlite3
 import database
+import userStore
 from jinja2 import Template
 
 global insert_html
@@ -36,15 +37,10 @@ def print_goals(result, userName):
     for goal in result:
         goalNum=goalNum+1
         global insert_html
-        #insert_html= insert_html + '<li>' + goal[0] + '<button class="del_button" type="submit" name="del_goal" id="button"' + str(goalNum) + '>Delete</button></li>\n'
         insert_html= insert_html + '<li>' + goal[0] + '</li>\n'
-        print(insert_html)
     return True
 
 def add_goal(userName, goal):
-    print("add goal")
-    print(userName)
-    print(goal)
     # Get database connection
     conn = database.get_db_connection()
     # Create cursor and run select to look for username
@@ -69,22 +65,15 @@ def add_goal(userName, goal):
     return "Successful"
 
 def del_goal():
-    print("del goal")
     return redirect(url_for("delgoal.delgoal")) 
 
 @goals_bp.route("/", methods=('GET', 'POST'))
 def goals():
-    print("goals")
-    #userName = userStore.get_user()
-    userName="diverdib" # Temporary
+    userName = userStore.get_user()
     # if this doesn't work, something is wrong with login
     get_goals(userName)
-    print("after get_goals")
-    print(request)
-    if request.method == "POST":
-        print("add")            
+    if request.method == "POST":          
         goal = request.form["add_goal"]
-        print(goal)
         result = add_goal(userName, goal)
         if (result == "Successful"):
             print(result)
@@ -237,9 +226,11 @@ def goals():
             <nav>
             <ul>
                 <li><h2>Limitless</h2></li>
-                <li><a href="/home/">Home</a></li>
-                <li><a href="/workout/" class="active">Workout</a></li>
-                <li><a href="/goals/">Goals</a></li>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/workout">Workout</a></li>
+                <li><a href="/goals">Goals</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li style="float:right"><a class="active" href="/logout">Logout</a></li>
             </ul>
         </nav>
         

@@ -102,9 +102,11 @@ def workout():
         <nav>
             <ul>
                 <li><h2>Limitless</h2></li>
-                <li><a href="/home/">Home</a></li>
-                <li><a href="/workout/" class="active">Workout</a></li>
-                <li><a href="/goals/">Goals</a></li>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/workout">Workout</a></li>
+                <li><a href="/goals">Goals</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li style="float:right"><a class="active" href="/logout">Logout</a></li>
             </ul>
         </nav>
 
@@ -130,8 +132,8 @@ def workout():
                 <p><a href='/yoga/'>Yoga</a></p>
             </div>
             <div class="icon">
-                <img src="https://via.placeholder.com/50" alt="Sports">
-                <p>Sports</p>
+                <img src="/static/img/sports.png" alt="Sports">
+                <p><a href='/sports/'>Sports</a></p>
             </div>
             <div class="icon">
                 <img src="/static/img/swim.png" alt="Swimming">
