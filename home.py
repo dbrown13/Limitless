@@ -113,10 +113,12 @@ def home():
         <nav>
             <ul>
                 <li><h2>Limitless</h2></li>
+                <li><a href="/home">Home</a></li>
                 <li><a href="/workout">Workout</a></li>
                 <li><a href="/goals">Goals</a></li>
                 <li><a href="/about">About Us</a></li>
                 <li style="float:right"><a class="active" href="/logout">Logout</a></li>
+                <li style="float:right"><a class="active" href="/profile">Profile</a></li>
             </ul>
         </nav>
 
