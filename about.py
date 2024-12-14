@@ -1,18 +1,19 @@
-from flask import Blueprint
-account_bp = Blueprint("account", __name__)
+from flask import Flask, Blueprint, render_template_string, request, redirect, url_for
 
 
-@account_bp.route('/')
-def account():
+about_bp = Blueprint("about", __name__)
+ 
+@about_bp.route('/')
+def about():
+
     html = """
     <!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Limitless - Profile Page</title>
+        <title>Limitless - About Us</title>
         <style>
-            /* General Styles */
             body {
                 font-family: Arial, sans-serif;
                 margin: 0;
@@ -73,7 +74,7 @@ def account():
                 line-height: 100px;
                 text-align: center;
                 margin-bottom: 20px;
-                color: #000;
+                background-color: #ddd;
             }
 
             .profile-details {
@@ -103,35 +104,67 @@ def account():
             .buttons button:hover {
                 background-color: #0056b3;
             }
+
+            /* Apply border to table and cells */
+            table {
+                border: 1px hidden black; /* Hidden black border */
+            }
+            
+            th, td {
+                border: 1px hidden black; /* Hidden black border */
+                padding: 0.5rem; /* Optional: Add padding for content */
+            }
+
+            .center {
+                margin-left: auto;
+                margin-right: auto;
+            }
         </style>
     </head>
     <body>
         <nav>
             <ul>
                 <li><h2>Limitless</h2></li>
+                <li><a href="/home">Home</a></li>
                 <li><a href="/workout">Workout</a></li>
                 <li><a href="/goals">Goals</a></li>
-                <li><a href="/about">About Us</a></li>
                 <li style="float:right"><a class="active" href="/logout">Logout</a></li>
             </ul>
         </nav>
 
         <div class="container">
-            <div class="profile-icon">
-                <span>&#128100;</span> <!-- Unicode for user icon -->
-            </div>
-            <div class="profile-details">
-                <p><strong>Name:</strong> [Your Name]</p>
-                <p><strong>Address:</strong> [Your Address]</p>
-                <p><strong>Phone Number:</strong> [Your Phone Number]</p>
-                <p><strong>Biography:</strong> [Short Bio]</p>
-            </div>
-            <div class="buttons">
-                <button>Edit Profile</button>
-                <button>Logout</button>
-            </div>
+            <p>Information about us goes here...</p>
+            <hr>
+
+            <table class="center">
+                <caption><strong>
+                    Contact Information
+                    
+                </strong></caption>
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Technical Support</td>
+                        <td>888-111.2222</td>
+                        <td>TechSupport@limitless.com</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Account Support</td>
+                        <td>888-333-4444</td>
+                        <td>AcctSupport@limitless.com</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </body>
     </html>
     """
     return html
+
+

@@ -11,7 +11,6 @@ goalList = []
 del_goal_bp = Blueprint("goals/delete", __name__)
 
 def get_goals(userName):
-    print("get goals")
     global insert_html
     insert_html=""
     # Get database connection
@@ -35,28 +34,20 @@ def get_goals(userName):
     return True
 
 def print_goals(result, userName):
-    print("print goals")
     global goalList
     goalList = []
-    #goalNum = 0
     for goal in result:
-        #goalNum=goalNum+1
         goalList.append(goal[0])
         global insert_html
-        #insert_html= insert_html + '<li>' + goal[0] + '<button class="del_button" type="submit" name="del_goal" id="button"' + str(goalNum) + '>Delete</button></li>\n'
         insert_html= insert_html + '<li>' + goal[0] + '</li>\n'
-        print(insert_html)
     return True
 
 def del_num(userName, num):
-    print("del goal")
     global goalList
-    print(f"Length = {len(goalList)}")
-    print(f"num = {num}")
     if num >= len(goalList):
         message = "The goal list is not that long"
         return message
-    print(goalList[num])    
+ 
     # Get database connection
     conn = database.get_db_connection()
     # Create cursor and run select to look for username
@@ -82,15 +73,10 @@ def del_num(userName, num):
 
 @del_goal_bp.route('/', methods=('GET', 'POST'))
 def del_goal():
-    print("delete goal")
-    #userName = userStore.get_user()
-    userName="diverdib" # Temporary
+    userName = userStore.get_user()
     # if this doesn't work, something is wrong with login
     get_goals(userName)
-    print("after get_goals")
-    print(request)
-    if request.method == "POST":
-        print("delete")            
+    if request.method == "POST":     
         goalNum = request.form["del_goal"]
         result = del_num(userName, int(goalNum)-1)
         if (result == "Successful"):
