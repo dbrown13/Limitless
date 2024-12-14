@@ -246,7 +246,7 @@ def edit_profile():
         if (message == "Successful profile update"):
             print(message)
 
-            return redirect(url_for('home.home'))  # Redirect to the profile page
+            return redirect(url_for('profile_screen.profile'))  # Redirect to the profile page
 
     html = """
     <!DOCTYPE html>
