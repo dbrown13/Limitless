@@ -1,6 +1,7 @@
 from flask import Blueprint, request, redirect, url_for
 import sqlite3
 import database
+import userStore
 from jinja2 import Template
 
 global insert_html
@@ -79,9 +80,10 @@ def del_goal():
     if request.method == "POST":     
         goalNum = request.form["del_goal"]
         result = del_num(userName, int(goalNum)-1)
-        if (result == "Successful"):
+        if (result == "Successful delete"):
             print(result)
             message = result
+            print("Before get_goals")
             get_goals(userName)
         else:
             print(result)
